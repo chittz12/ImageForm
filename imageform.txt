@@ -1,0 +1,49 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import cv2
+
+# Dimensions of the flag
+height = 300
+width = 450
+
+# Create an empty array for the flag with white background
+flag = np.ones((height, width, 3), dtype=np.uint8) * 255  # White background
+
+
+stripe_height = height // 3
+
+# Fill the top stripe with saffron color
+flag[:stripe_height, :] = [255, 153, 51]  
+
+# Fill the middle stripe with white color
+flag[stripe_height:2*stripe_height, :] = [255, 255, 255] 
+
+# Fill the bottom stripe with green color
+flag[2*stripe_height:, :] = [0, 128, 0] 
+
+# Calculate the center of the white stripe
+center_x = width // 2
+center_y = stripe_height + (stripe_height // 2)  # Centered vertically in the white stripe
+
+# Calculate the radius of the Ashoka Chakra
+chakra_radius = min(stripe_height // 2, width // 2) - 10  # Ensure it fits within the white stripe
+
+# Number of spokes in the Ashoka Chakra
+num_spokes = 24
+
+# Draw the Ashoka Chakra in the center of the white stripe (circle with 24 spokes)
+for i in range(num_spokes):
+    angle = 360 * i / num_spokes
+    x1 = int(center_x + chakra_radius * np.cos(np.radians(angle)))
+    y1 = int(center_y + chakra_radius * np.sin(np.radians(angle)))
+    x2 = int(center_x + (chakra_radius - 10) * np.cos(np.radians(angle)))
+    y2 = int(center_y + (chakra_radius - 10) * np.sin(np.radians(angle)))
+    flag = cv2.line(flag, (x1, y1), (x2, y2), [0, 0, 128], 5)  # Blue color for chakra (RGB)
+
+# Display the flag using Matplotlib
+plt.imshow(flag)
+plt.axis('off')  # Hide axis
+plt.show()
+
+# Save the flag as an image
+plt.imsave('indian_flag.png', flag)
